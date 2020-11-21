@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ThirdTryAPI.Data;
+using ThirdTryAPI.Interfaces;
+using ThirdTryAPI.Repositories;
 
 namespace ThirdTryAPI
 {
@@ -29,7 +31,11 @@ namespace ThirdTryAPI
         {
             services.AddControllers();
 
+            //SQL bazastan cvdoba contextistvis
             services.AddDbContext<StoreContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            //SQL bazastan cvdoma productRepository-t
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddCors(opt =>
             {
