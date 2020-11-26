@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ThirdTryAPI.Data;
+using ThirdTryAPI.Helpers;
 using ThirdTryAPI.Interfaces;
 using ThirdTryAPI.Repositories;
 
@@ -41,6 +43,9 @@ namespace ThirdTryAPI
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            //Use AutoMapper
+            services.AddAutoMapper(typeof(MappingProfiles));
+
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -63,6 +68,8 @@ namespace ThirdTryAPI
             app.UseRouting();
 
             app.UseCors("CorsPolicy");
+
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 
