@@ -37,6 +37,10 @@ namespace ThirdTryAPI
             //SQL bazastan cvdoma productRepository-t
             services.AddScoped<IProductRepository, ProductRepository>();
 
+            //SQL bazastan Generic repository-t cvdoma
+
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
