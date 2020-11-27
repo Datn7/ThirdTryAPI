@@ -13,8 +13,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ThirdTryAPI.Data;
+using ThirdTryAPI.Errors;
+using ThirdTryAPI.Exstensions;
 using ThirdTryAPI.Helpers;
 using ThirdTryAPI.Interfaces;
+using ThirdTryAPI.Middleware;
 using ThirdTryAPI.Repositories;
 
 namespace ThirdTryAPI
@@ -36,15 +39,12 @@ namespace ThirdTryAPI
             //SQL bazastan cvdoba contextistvis
             services.AddDbContext<StoreContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            //SQL bazastan cvdoma productRepository-t
-            services.AddScoped<IProductRepository, ProductRepository>();
-
-            //SQL bazastan Generic repository-t cvdoma
-
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             //Use AutoMapper
             services.AddAutoMapper(typeof(MappingProfiles));
+
+            //use expanded external ApplicationServicesExstensions to add services
+            services.AddApplicationServices();
 
             services.AddCors(opt =>
             {
@@ -53,15 +53,27 @@ namespace ThirdTryAPI
                     policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
                 });
             });
+
+            //use created exstension to add swagger
+            services.AddSwaggerDocumentation();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+
+            /*
+              if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+             */
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.UseHttpsRedirection();
 
@@ -72,6 +84,9 @@ namespace ThirdTryAPI
             app.UseStaticFiles();
 
             app.UseAuthorization();
+
+            //use swagger documentation exstension
+            app.UseSwaggerDocumentation();
 
             app.UseEndpoints(endpoints =>
             {

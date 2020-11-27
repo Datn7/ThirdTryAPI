@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ThirdTryAPI.Data;
 using ThirdTryAPI.Dtos;
 using ThirdTryAPI.Entities;
+using ThirdTryAPI.Errors;
 using ThirdTryAPI.Interfaces;
 using ThirdTryAPI.Specifications;
 
@@ -16,7 +17,7 @@ namespace ThirdTryAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
     {
         private readonly IGenericRepository<Product> productsRepo;
         private readonly IGenericRepository<ProductBrand> productBrandRepo;
@@ -47,11 +48,16 @@ namespace ThirdTryAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        //documenting swagger
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
 
             var product = await productsRepo.GetEntityWithSpec(spec);
+
+            if (product == null) return NotFound(new ApiResponse(404));
 
             return mapper.Map<Product, ProductToReturnDto>(product);
         }
