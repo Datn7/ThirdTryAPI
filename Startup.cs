@@ -79,9 +79,11 @@ namespace ThirdTryAPI
 
             app.UseRouting();
 
-            app.UseCors("CorsPolicy");
-
+            //statikuri failebi
             app.UseStaticFiles();
+
+            //add CORS
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
