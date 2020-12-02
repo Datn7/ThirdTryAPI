@@ -19,8 +19,10 @@ namespace ThirdTryAPI.Exstensions
             services.AddScoped<IProductRepository, ProductRepository>();
 
             //SQL bazastan Generic repository-t cvdoma
-
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            //Basket repository gamoyeneba
+            services.AddScoped<IBasketRepository, BasketRepository>();
 
             
             services.Configure<ApiBehaviorOptions>(options =>
