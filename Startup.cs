@@ -40,6 +40,9 @@ namespace ThirdTryAPI
             //SQL bazastan cvdoba contextistvis
             services.AddDbContext<StoreContext>(x => x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            //adding identity
+            services.AddDbContext<AppIdentityDbContext>(x=>x.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+
             //add Redis
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
@@ -53,6 +56,9 @@ namespace ThirdTryAPI
 
             //use expanded external ApplicationServicesExstensions to add services
             services.AddApplicationServices();
+
+            //use identity services exstension
+            services.AddIdentityServices(Configuration);
 
             services.AddCors(opt =>
             {
@@ -92,6 +98,9 @@ namespace ThirdTryAPI
 
             //add CORS
             app.UseCors("CorsPolicy");
+
+            // add authentication
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

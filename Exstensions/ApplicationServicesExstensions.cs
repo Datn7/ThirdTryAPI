@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ThirdTryAPI.Errors;
 using ThirdTryAPI.Interfaces;
 using ThirdTryAPI.Repositories;
+using ThirdTryAPI.Services;
 
 namespace ThirdTryAPI.Exstensions
 {
@@ -24,6 +25,8 @@ namespace ThirdTryAPI.Exstensions
             //Basket repository gamoyeneba
             services.AddScoped<IBasketRepository, BasketRepository>();
 
+            //add JWT Service
+            services.AddScoped<ITokenService, TokenService>();
             
             services.Configure<ApiBehaviorOptions>(options =>
             {
